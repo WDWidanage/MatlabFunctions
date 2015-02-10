@@ -1,6 +1,6 @@
 # Introduction
 
-Here you will find a collection of Matlab functions which I've written during my research. Each function has a doc string explaining the function and its input and output arguments. You may use the code for academic research but no warranty is guaranteed (see conditions below). Feel free to get in touch for any further questions (widanage@gmail.com).
+Here you will find a collection of Matlab functions which I've written during my research. Each function has a doc string explaining the function and its input and output arguments. You may use the code for academic research but no warranty is guaranteed (see conditions below). Feel free to get in touch for any further questions.
 
 
 ---

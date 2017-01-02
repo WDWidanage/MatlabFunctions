@@ -1,4 +1,4 @@
-function [Est]= LPMi(x,y,F,fs,poly_order,method)
+function [Est] = LPMi(x,y,F,fs,poly_order,method)
 
 % Local polynomial method function when the system has a pole at the 
 % origin, pure integrator.
@@ -137,7 +137,7 @@ for kk=1:lf
     end
     
     %Call numerically stable linear least squares function
-    [Theta,CT,Cv] = Lls(Kn,Out);
+    [Theta,results] = Lls(Kn,Out);
     
     if method.transient == 1
         %Extract FRF's and their variances
@@ -146,13 +146,13 @@ for kk=1:lf
         Theta([1,poly_order+2])=[];
         Est.alpha(kk,:)=Theta(1:poly_order*2);      % polynomial variables
         
-        Est.Cg(kk,1)=CT(1);                         % Variance of G
-        Est.Ct(kk,1)=CT(poly_order+2);              % Transient variance
+        Est.Cg(kk,1)=results.paraVar(1);                         % Variance of G
+        Est.Ct(kk,1)=results.paraVar(poly_order+2);              % Transient variance
         
-        Est.Cv(kk,1)=Cv;
+        Est.Cv(kk,1)=results.noiseVar;
         
         Est.a(kk,:)=Theta(poly_order*2+1);          % Ramp gradient
-        Est.Ca(kk,1)=CT(ntheta);                    % Gradient variance
+        Est.Ca(kk,1)=results.paraVar(ntheta);                    % Gradient variance
     else
         %Extract FRF's and their variances
         Est.Gtilda(kk,1)=Theta(1);                  % LTI branch dynamics
@@ -160,13 +160,13 @@ for kk=1:lf
         
         Est.alpha(kk,:)=Theta(2:poly_order+1);      % polynomial variables
         
-        Est.Cg(kk,1)=CT(1);                         % Variance of G
+        Est.Cg(kk,1)=results.paraVar(1);                         % Variance of G
         Est.Ct(kk,1)=0;                             % Transient variance is zero
         
-        Est.Cv(kk,1)=Cv;
+        Est.Cv(kk,1)=results.noiseVar;
         
         Est.a(kk,:)=Theta(poly_order+2);            % Ramp gradient
-        Est.Ca(kk,1)=CT(poly_order+2);              % Gradient variance
+        Est.Ca(kk,1)=results.paraVar(poly_order+2);              % Gradient variance
     end
     
     

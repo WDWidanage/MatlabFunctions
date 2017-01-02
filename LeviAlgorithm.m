@@ -1,5 +1,4 @@
-function [Model] = levi_algorithm(G,w,nb,na, varargin)
-%Check if domain and sampling frequency are provided
+function [Model] = LeviAlgorithm(G,w,nb,na, varargin)
 
 p = inputParser;
 
@@ -18,19 +17,23 @@ addParameter(p,'fs',1);
 % Re-parse parObj
 parse(p,G,w,nb,na,varargin{:})
 
+G = p.Results.G;
+w = p.Results.w;
+nb = p.Results.nb;
+na = p.Results.na;
+fs = p.Results.fs;
 
-j=sqrt(-1);
-if domain=='s' 
-    v = j*w*fs;
+if p.Results.domain == 's' 
+    v = 1i*w*fs;
 else
-    v = exp(-j*w);
+    v = exp(-1i*w);
 end
 
 
-F=length(w);
+F = length(w);
 
 %Construct regressor matrix
-for kk=1:F
+for kk = 1:F
     Reg(kk,:) = [-G(kk)*(v(kk).^(na:-1:1)) v(kk).^(nb:-1:0)];
 end
 
@@ -38,22 +41,6 @@ Regt = [real(Reg);imag(Reg)];
 Gt = [real(G);imag(G)];
 
 theta = Lls(Regt,Gt);
-
-%Numerically stabe least squares
-% Scale=sqrt(sum(Regt.^2)); %l2 norm of each column
-% idxZeros = Scale<1E-14;
-% Scale(idxZeros)=1;
-% Regt=Regt./repmat(Scale,2*F,1);
-% 
-% %SVD of Reg
-% [Un, Sn, Vn] = svd(Regt,0);
-% ss = diag(Sn);
-% idxZeros = ss < 1E-14;
-% ss(idxZeros) = inf;
-% ss = diag(1./ss);
-% theta=Vn*ss*Un'*Gt;
-% theta=theta./Scale';
-
 
 Model.A = theta(1:na);
 Model.B = theta(na+1:end);

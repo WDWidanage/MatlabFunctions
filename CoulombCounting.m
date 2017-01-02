@@ -2,8 +2,7 @@ function [soc, ampSec] = CoulombCounting(I,time,Cn_c,Cn_d,SoC0)
 % Coulomb counting to estimate state-of-charge
 % Perform current integration and normalise with resepect to battery
 % capacity. Cn_c and Cn_d are the measured battery capacity when charging
-% and discharging respectively at a given temperature and assumes
-% invaraince in current magnitude.
+% and discharging respectively at a given temperature.
 %
 % Integration is performed using trapezoidal method with saturation limits
 % of 0 and 1
@@ -19,7 +18,7 @@ function [soc, ampSec] = CoulombCounting(I,time,Cn_c,Cn_d,SoC0)
 % soc: Remaining state-of-charge (%), size N x 1
 % ampSec: Ampere seconds (As), size N x 1
 %
-% W.D. Widanage 09/02/2013 (Reconfigure)
+% W.D. Widanage 09/02/2013 (Boogie woogie!)
 
 N = length(I);
 

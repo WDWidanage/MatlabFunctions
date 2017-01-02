@@ -14,7 +14,7 @@ end
 
 j=sqrt(-1);
 if domain=='z'
-    v=exp(-j*w);    
+    v=exp(j*w);    
 else
      v=j*w*fs;
 end

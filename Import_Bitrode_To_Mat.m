@@ -98,20 +98,13 @@ else
     end
 end
 
-if  numel(parObj.Results.hdPos) == 2
-    rowColumnNames = parObj.Results.hdPos(1);
-    rowDataStart = parObj.Results.hdPos(2);
-else
-    rowColumnNames = [];
-    rowDataStart = [];
-end
 
 %loop through files and send to function to get data, then save
 nFiles = numel(fullFileNames);
 for n = 1:nFiles
     currentFile = fullFileNames{n};
     
-    hdrData = HdrDataRow(currentFile); % Call function determine header and data row
+    hdrData =  HdrDataRow(currentFile,parObj); % Call function determine header and data row
     
     tic
     data = Import_Data(currentFile,hdrData(1),hdrData(2));
@@ -277,7 +270,7 @@ end
 
 
 
-function hdrDataVec = HdrDataRow(currentFile)
+function hdrDataVec = HdrDataRow(currentFile,parObj)
 % Automatically determine the start of the header and data row. Three
 % possible otptions.
 %  1.   If first row has the word 'Test', the bitrode csv file has the extra file
@@ -294,7 +287,10 @@ frewind(fid); %just in case
 
 fstRowStr = fgetl(fid);
 
-if regexp(fstRowStr,'Test')
+
+if  numel(parObj.Results.hdPos) == 2
+    hdrDataVec= parObj.Results.hdPos;
+elseif regexp(fstRowStr,'Test')
     hdrDataVec = [14,16];
 elseif regexp(fstRowStr,'Current')
     hdrDataVec = [1,3];
@@ -401,11 +397,11 @@ if isempty(channelString)           % No headers are specified. Use default, Cha
     channelNames = regexp(channelNamesTmp,'Channel_[\d]{0,}','match'); % Get channel hdr names
     units = repmat({'None'},nChannels,1);
 else
-    expHdr = {'Exclude','Total Time','Time','Cycle','Step time','Loop Counter #1','Loop Counter #2','Loop Counter #3','Step',...
+    expHdr = {'Exclude','Total Time','Time','Cycle','Step Time','Loop Counter #1','Loop Counter #2','Loop Counter #3','Step',...
               'Current','Voltage','Power', 'Amp-Hours','Watt-Hours',...
               'Amp Hours Charge','Amp Hours Discharge','Watt Hours Charge','Watt Hours Discharge',...
               'Temperature A1','Temperature A2','Unassigned A1','Unassigned A2','Unassigned A3','Unassigned A4','Mode','Data Acquisition Flag',...
-              'Assignable Variable 1'};
+              'Assignable Variable 1','Assignable Variable 2','Assignable Variable 3','Assignable Variable 4'};
     channelNamesTmp = regexp(channelString,'[\w\s-#]{4,}','match'); % Get channel hdr names
     
     count = 0;
@@ -494,7 +490,7 @@ for n = 1:N
         multiplier = [3600, 60, 1, 1/div];
     end
     if ~isempty(timeElements)
-        timeVec(n) = multiplier*timeElements;
+        timeVec(n) = multiplier*timeElements;    
     end
 end
 

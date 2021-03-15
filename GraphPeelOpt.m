@@ -84,6 +84,7 @@ for nn = nExp                           % Loop over maximum possible number of e
     fh = @SumOfExp;
     optionsExp.Jacobian = 'on';
     optionsExp.termMsg = 'n';
+    optionsExp.iterMax = 100;
     [thetaOptTmp,infoTheta] = LMAlgorithm_varIdx(fh, [a;b], x, y, optionsExp);
     aOpt = thetaOptTmp(1:nn);
     bOpt = thetaOptTmp(nn+1:end);
@@ -137,14 +138,18 @@ fracErrMinExponent = thetaOptFracErr(optModelOrder + idxMin);
 stdMaxTimeConst = timeConstMax*fracErrMinExponent;
 % stdMaxTimeCont = (-1./(minExponent+stdMinExponent)) - timeConstMax;
 
+timeSegments = linspace(0, x(end), optModelOrder+1);
+timePoints = timeSegments(2:end);
 
 outOpt.theta = theta;                                % Save all optimised values for each of the nExp
 outOpt.cF = cF;                                      % Save the cost-function calue for each of the nExp
 outOpt.optModelOrder = optModelOrder;                % Save optimum model order
 outOpt.slowestTimeConst = timeConstMax;              % Save the slowest time constant
 outOpt.slowestTimeConstStd = stdMaxTimeConst;        % Save the slowest time constant std
-
-
+outOpt.volGP = SumOfExp(thetaOpt(:),x);
+outOpt.volGPOpt = SumOfExp(thetaOpt0(:),x);
+outOpt.timeConstants = sort(-1./thetaOpt(:,2));
+outOpt.timePoints = timePoints; 
 
 % Plot cost-fucntion value for each nExp and optimum fit for smallest cF
 if strcmpi(p.Results.plotGP,'y')
@@ -154,8 +159,8 @@ if strcmpi(p.Results.plotGP,'y')
     xlabel('Number of exponentials'); ylabel('AIC value')
     
     subplot(2,1,2)
-    yOpt = SumOfExp(thetaOpt(:),x);
-    yhat = SumOfExp(thetaOpt0(:),x);
+    yOpt = outOpt.volGP;
+    yhat = outOpt.volGPOpt;
     
     plot(x,y,'-o',x,yhat,'- x',x,yOpt,'. -');
     xlabel('x');

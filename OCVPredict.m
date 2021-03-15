@@ -5,20 +5,12 @@ function [thetaOpt] = OCVPredict(x,y,theta0)
 % Input arguments:
 %   x: exponent
 %   y: function value
+%   thet0: Initial parameter guess [U, a1,...,aM,b1,...,bM], size M+1 x 1 
+%          with M the number of exponentials
 %
-% Optional input arguments. Create a structure variable with the following field:
-%   plotFit: Set plotFit to 'y' to plot graph-peeling curve. Default 'n'
-%
-% Outputs:
-%   thetaOpt: Overall optimum parameters based on the lowest cost-function.
-%             theta = [a1;..;an, b1;...;bn] size nExp x 2
-%   outOpt:  A structured varaible with the following fields as optional extras
-%            theta:             Optimised set of parameters for each nExp
-%            cF:                Value of cost-function for each nExp
-%            modelOrder:        Optimum number of exponentials (model
-%                               order)
-%            slowestTimeConst:  Slowest time constant for the optimum model
-%                               order
+% Output:
+%   thetaOpt: Optimum parameters based on constrained optimisation
+%             theta = [U, a1;..;an, b1;...;bn] size nExp x 2
 %
 % Copyright (C) W. D. Widanage -  WMG, University of Warwick, U.K. 25/12/2016 (The Thing That Should Not be)
 % All Rights Reserved

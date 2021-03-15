@@ -40,7 +40,8 @@ end
 Regt = [real(Reg);imag(Reg)];
 Gt = [real(G);imag(G)];
 
-theta = Lls(Regt,Gt);
+[theta, results] = Lls(Regt,Gt);
 
 Model.A = theta(1:na);
 Model.B = theta(na+1:end);
+Model.results = results;

@@ -11,6 +11,7 @@ function [theta,results] = Lls(K,Z,varargin)
 % Inputs (optional):
 %   ny: Output noise vector, std of output noise for weighted least
 %   squares, size n x 1. default ny = ones(n,1);
+%   plotFit: Set plot as 1 or zero to look at the fitted vs data
 %
 % Outputs:
 %   theta: Optimum parameter estimate, size m x 1
@@ -36,6 +37,8 @@ addRequired(parObj,'Z', @isnumeric);
 
 % Optional parameters
 addOptional(parObj,'ny',ones(size(Z)),@isnumeric);
+addOptional(parObj,'plotFit',0,@isnumeric);
+
 
 
 % Re-parse parObj
@@ -45,6 +48,7 @@ parse(parObj,K,Z,varargin{:})
 K = parObj.Results.K;
 Z = parObj.Results.Z;
 ny = parObj.Results.ny;
+plotFit = parObj.Results.plotFit;
 
 % Weight matrix
 W = spdiags(1./ny,0,length(ny),length(ny));
@@ -78,6 +82,7 @@ Sv = diag(1./ss);               %Inverse singular value matrix
 
 % Least squares solution
 theta = N*V*Sv*U'*Z;
+% cond(N*V*Sv*U')
 
 %Projection matrix and residuals
 P = (eye(length(Z))-U*(U')); % Projection matrix
@@ -92,6 +97,13 @@ else                                                        % Else no need to es
     results.paraCov = (N')*V*Sv*Sv*(V')*N;                  % Parameter covariance    
 end
 
+if plotFit
+    figure
+    Zm = K*theta;
+    plot([1:length(Z)]',Zm,'. -',[1:length(Z)]',Z,'o-');
+    xlabel('Index (-)'); ylabel('Model and Measured')
+    legend('Model','Data')
+end
 results.paraVar = diag(results.paraCov);                % Parameter variance
 results.resVec = R;                                     % Residual vector
 results.resNorm = norm(R);                              % Residual norm

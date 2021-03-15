@@ -81,6 +81,7 @@ if  isempty(timeVec)
 end
 
  if plotSeg
+     figure
      plot(timeVec',current,'. -', timeVec(idx_Exc(:,1)),zeros(lEx,1),'g o','MarkerFaceColor','g');
      hold on; 
      plot(timeVec(idx_Exc(:,2)),current(idx_Exc(:,2)),'r o','MarkerFaceColor','r');

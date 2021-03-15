@@ -20,6 +20,8 @@ function [theta,results] = LMAlgorithm(fh, theta0, u, d, varargin)
 %   TolDT:  Termination tolerance of parameter update, default TolDT = 1E-6, double size 1 x 1
 %   diagnosis: Set daignosis to 'on' to plot cost-function and lambda vs iterations, default diagnosis = 'off'
 %   epsilon: if Jacobian is 'off', use epsilon for parameter incerement to calculate approximate Jacobian, default epsilon = 1E-6, double size 1 x 1
+%   dispMsg: Specifiy as 'on' or 'off'. If 'on' messages will be printed 
+%            else no messages are printed. Default 'on'.
 %
 % Output arguments:
 %   theta: Optimised parameter vector, size N x 1
@@ -56,6 +58,7 @@ addParameter(p,'iterMax',1000,@isnumeric)
 addParameter(p,'TolDT',1E-6,@isnumeric)
 addParameter(p,'diagnosis','off')
 addParameter(p,'epsilon',1E-6,@isnumeric)
+addParameter(p,'dispMsg','on')
 
 % Re-parse parObj
 parse(p,fh, theta0, u, d, varargin{:})
@@ -99,7 +102,7 @@ while norm(deltaT) > p.Results.TolDT && iterUpdate <= p.Results.iterMax
     end
     while cF > cF_prev % Increase lambda and re-evaluate parameter update
         lambda = lambda*10;
-        deltaT = parameterUpdate(J_prev,F_prev,lambda);     % Calucuate parameter update
+        deltaT = parameterUpdate(J_prev,F_prev,lambda);     % Calculate parameter update
         theta = theta_prev + deltaT;                        % Update parameter estimate
         
         % Evalaute model function and Jacobian for updated parameter
@@ -138,7 +141,9 @@ while norm(deltaT) > p.Results.TolDT && iterUpdate <= p.Results.iterMax
     
     if regRank.unique == 0
         results.rankMsg{iterUpdate,1} =  sprintf(['LM Regressor rank deficient at iteration %d %s'],iterUpdate,regRank.msg);
-        fprintf(['\nLM Regressor rank deficient at iteration %d %s'],iterUpdate,regRank.msg);
+        if strcmp(p.Results.dispMsg,'on')
+            fprintf(['\nLM Regressor rank deficient at iteration %d %s'],iterUpdate,regRank.msg);
+        end
         results.LMRankFull(iterUpdate,1) = regRank.unique;
     else
         results.rankMsg{iterUpdate,1} = sprintf(['LM Regressor preserves full rank at iteration %d %s'],iterUpdate,regRank.msg);
@@ -164,7 +169,9 @@ end
 idx = [norm(deltaT) < p.Results.TolDT, iterUpdate == p.Results.iterMax];
 termStr = {[' Parameter update is smaller than specified tolerance, TolDT = ', num2str(p.Results.TolDT),'.'],...
            [' Maximum iteration reached, iterMax = ', num2str(p.Results.iterMax),'.']};
-fprintf('\n\nIteration terminated: %s\n',termStr{idx});
+       if strcmp(p.Results.dispMsg,'on')
+           fprintf('\n\nIteration terminated: %s\n',termStr{idx});
+       end
 
 results.covTheta = covTheta;
 results.stdTheta = sqrt(diag(covTheta));

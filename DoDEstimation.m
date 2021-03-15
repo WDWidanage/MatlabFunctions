@@ -45,7 +45,7 @@ end
 dt = (time(2) - time(1))*ones(N,1);
 
 % Call derivative function to obtain smooth derivative of SoC
-du = Derivative(u,alpha,dt,[],[],diag);
+du = DerivativeTV(u,dt,alpha,[],[],diag);
 
 idxTP = find(abs([0;diff(sign(du))]) == 2); % Find the indices of the zero crossing points of the derivative
 

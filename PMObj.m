@@ -334,10 +334,14 @@ classdef PMObj < handle
                 
                 % Store ECM parameters, AIC and cost-fucntion value
                 obj.nlECMPara.Ro = -tfECMParaOpt(1);
-                obj.nlECMPara.Rp = -tfECMParaOpt(2:nb+1);
-                obj.nlECMPara.Tau = tfECMParaOpt(nb+2:end);
-                obj.nlECMPara.Cp = obj.nlECMPara.Tau ./obj.nlECMPara.Rp;
-                obj.nlECMPara.ecmStd = infoECMTFPara.stdTheta;
+                [obj.nlECMPara.Rp,idx] = sort(-tfECMParaOpt(2:nb+1));
+                Tau =  tfECMParaOpt(nb+2:end);
+                obj.nlECMPara.Tau = Tau(idx);
+                obj.nlECMPara.Cp = obj.nlECMPara.Tau./obj.nlECMPara.Rp;
+                RoStd = infoECMTFPara.stdTheta(1);
+                RpStd = infoECMTFPara.stdTheta(2:nb+1);
+                TauStd = infoECMTFPara.stdTheta(nb+2:end);
+                obj.nlECMPara.ecmStd = [RoStd; RpStd(idx);TauStd(idx)];     
                 obj.nlECMPara.ecmAIC = dtPts*log(infoECMTFPara.cF_iter(end)/dtPts) + 2*dof + 2*dof*(dof+1)/(dtPts-dof-1);
                 obj.nlECMPara.cfECM = infoECMTFPara.cF_iter(end);
                 
@@ -476,6 +480,45 @@ classdef PMObj < handle
         %%%%%%%%%%%%%%%%%
         % Ploting methods
         %%%%%%%%%%%%%%%%%
+        function obj = plotRefSig(obj)
+            cRate = obj.refSig.cRate;
+            fs = obj.refSig.fs;
+            maxIrate = max(obj.refSig.pmSignal)/cRate;
+            minIrate = min(obj.refSig.pmSignal)/cRate;
+            currRms = rms(obj.refSig.pmSignal);
+            BS = fft(obj.refSig.baseSignal);
+            
+            freqRec = [0:obj.refSig.N-1]/(obj.refSig.N)*fs;
+            
+            U = fft(obj.refSig.pmSignal);
+            excitedLines = (obj.refSig.harmExc)+1;        % Excited lines realtive to record
+            freqExc = (excitedLines-1)*fs/(obj.refSig.N);
+            freqSupp = obj.refSig.harmSupp*fs/obj.refSig.N;
+            
+            
+            figure()
+            plot(obj.refSig.timeVec,obj.refSig.pmSignal,'- .');
+            xlabel('Time (s)'); ylabel ('Current (A)'); title(['Cmin: ',num2str(minIrate),' Cmax: ',num2str(maxIrate), ' Rms: ',num2str(currRms)])
+            
+            figure()
+            hist(obj.refSig.pmSignal,18)
+            xlabel('Signal amplitude'); ylabel('Frequency of occurrence')
+            
+            % Perform Coulomb counting to check SoC variation
+            soc= CoulombCounting(obj.refSig.pmSignal,obj.refSig.timeVec,cRate,cRate,obj.refSoC/100);
+            socChange = [max(soc)-min(soc)]*100;
+            
+            figure()
+            plot(obj.refSig.timeVec,soc*100)
+            xlabel('Time (s)'); ylabel('SoC (%)'); title(['SoC Change: ', num2str(socChange),'%'])
+            
+            figure();
+            plot(freqRec,abs(BS),'-x',freqExc,abs(U(excitedLines)),'-or',freqSupp,abs(U(obj.refSig.harmSupp+1)),'go');
+            xlabel('Frequency (Hz)')
+            ylabel('FFT magnitude (abs)')
+            xlim([0, 1])
+            
+        end
         
         function obj = plotMeasSig(obj)
             startIdx = 1;

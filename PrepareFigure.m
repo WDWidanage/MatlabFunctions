@@ -123,6 +123,7 @@ TickDirInOut = 'out';                               % Set ticks (mini dashes) in
 XGridOnOff = 'off';                                 % Set horizontal grids to on or off
 YGridOnOff = 'off';                                 % Set vertical grids to on or off
 
+
 % Settings for Beamer
 idxBeamer = find(strcmp(varargin,'Beamer')==1);       % Check for Beamer argument
 if isempty(idxBeamer)
@@ -167,7 +168,7 @@ else
     
     defAxisSize = [0.13,0.21,0.775,0.650];              % Use this as default axis postion and size if only one plot, multiple plots uses matlab default
     defFigSize = [90,90,1100,650];                      % Default figure postion and size
-    portFigSize = [90,70,800,900];                     % Portrait figure postion and size
+    portFigSize = [90,70,500,900];                     % Portrait figure postion and size
     
     
     idx = find(strcmp(varargin,'LineWidth')==1);        % Line width
@@ -197,7 +198,7 @@ else
     axisFontAngle = 'Normal';                       % Axis font angle, 'Normal, 'Italic','Oblique'
     idx = find(strcmp(varargin,'axisFontSize')==1);      % Axis font size in points
     if isempty(idx)
-        axisFontSize = 12;
+        axisFontSize = 20;
     else
         axisFontSize = varargin{idx+1};
     end
@@ -208,18 +209,18 @@ else
     labelFontAngle = 'Normal';                      % Label font angle, 'Normal, 'Italic','Oblique
     idx = find(strcmp(varargin,'labelFontSize')==1);% Label font size in points
     if isempty(idx)
-        labelFontSize = 12;
+        labelFontSize = 20;
     else
         labelFontSize = varargin{idx+1};
     end
     labelFontColour = 'black';                      % Label font colour
     
-    legendFontSize = 12;                            % Legend font size in points
+    legendFontSize = 14;                            % Legend font size in points
     legendFontColour = 'black';                     % Legend font colour
     
     idx = find(strcmp(varargin,'annotationFontSize')==1);% Annotation font size in points
     if isempty(idx)
-        annotationFontSize = 9;
+        annotationFontSize = 14;
     else
         annotationFontSize = varargin{idx+1};
     end
@@ -236,7 +237,7 @@ else
     
     idx = find(strcmp(varargin,'LineWidth')==1);        % Line width
     if isempty(idx)
-        LineWidth = 1;                                  % Use this as default line width for all plots
+        LineWidth = 3;                                  % Use this as default line width for all plots
     else
         LineWidth = varargin{idx+1};
     end
@@ -581,6 +582,21 @@ try                                                                 % Edit text 
 catch
 end
 
+% Edit text box properties
+hText = findobj('type','text');
+% try                                                                 % Edit text in textbox annotations
+%     set(hText,...
+%         'FontName'   , axisFont,...
+%         'FontSize'   , annotationFontSize,...
+%         'FontWeight',  annotationFontWeight,...
+%         'FontAngle',   annotationFontAngle,...
+%         'Color' , annotationFontColour,...
+%         'EdgeColor', annotationFontColour,...
+%         'Interpreter', interpreter,...
+%         'HorizontalAlignment','center',...
+%         'LineStyle','none');
+% catch
+% end
 
 % Edit double end arrow properties
 hBox = findobj('type','DoubleEndArrow');
@@ -632,6 +648,6 @@ if useSave
         print(figureNumber,'-depsc2',fileName)      % Save as an eps
         disp(['Figure is saved with filename: ',fileName,'.eps']);
     end
-    savefig(fileName);                               % Also save the .fig file
+    savefig(figureNumber,fileName);                               % Also save the .fig file
 end
 

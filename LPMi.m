@@ -38,7 +38,7 @@ catch,
 end
 try, fs;
 catch,
-    fs=1;
+    fs = 1;
 end
 try, method;
 catch,

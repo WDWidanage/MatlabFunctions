@@ -1,3 +1,0 @@
-function ChebLagrangeDerMat(varargin)
-
-end

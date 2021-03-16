@@ -57,8 +57,8 @@ for ii = 1:N
         end
     end
 end
-mat.D = D*(2/diff(int));     % First order derivative matrix. Double size N x N
-mat.D2 = D*D;                % Second order derivative matrix. Double size N x N
+mat.D = D*(2/diff(int));          % First order derivative matrix. Double size N x N
+mat.D2 = D*D;       % Second order derivative matrix. Double size N x N
 
 
 end

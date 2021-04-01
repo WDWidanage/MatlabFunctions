@@ -124,7 +124,7 @@ ocvResults.refOCVd = refOCVd;
 ocvResults.refOCVc = refOCVc;
 ocvResults.meanRefOCV = meanRefOCV;
 ocvResults.refSoC = refSoC;
-ocvResults.hystersis = [refOCVc-refOCVd];
+ocvResults.hystersis = [refOCVc-refOCVd]/2;
 
 
 

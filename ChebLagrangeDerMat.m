@@ -4,20 +4,20 @@ function [mat,info] = ChebLagrangeDerMat(varargin)
 % 1D Lagrange interpolation functions and Chebyshev collocation points of
 % the first kind
 %
-%
 % Inputs (optional):
 %   N: number of collocation points. Double size, 1 x 1. Default 6;
-%   int: Domain interval, Double size 1 x 2. Default [-1,1]
-%   plotFit: Set plot as 1 or zero to look at the fitted vs data
+%   int: Domain interval, Double size 1 x 2. Default [-1,1]. Use more
+%        collacation points if domain is increased
 %
 % Outputs:
 %   mat: Structure variable with following fields
 %        - D: First order derivative matrix. Double size N x N
 %        - D2: Second order derivative matrix. Double size N x N
 %
-%   infor: Structure variable with following fields
-%            - sn: Collocation points on standard interval, size N x 1
-%            - xn: Collocation points on input interval, size, N x 1
+%   info: Structure variable with following fields
+%            - sn: Collocation points on standard interval [-1,1], size N x 1
+%            - xn: Transformed collocation points on to required input interval, size, N x 1
+%            - N: Number of collocation points, size 1 x 1
 %
 % Copyright (C) W. D. Widanage -  WMG, University of Warwick, U.K. 15-03-2021 (The Lost Voices)
 % All Rights Reserved
@@ -36,12 +36,14 @@ N = parObj.Results.N;
 int = parObj.Results.int;
 
 P = N - 1;                          % Chebyshev polynomial order
-sn = -cos([0:P]*pi/P);              % Collocation points on standard interval 
+sn = -cos([0:P]'*pi/P);              % Collocation points on standard interval 
 xn = int(1) + diff(int)*(1+sn)/2;   % Collocation points on input interval
 info.sn = sn;
 info.xn = xn;
+info.N = N;
 
 % Define derivative matrices
+% El-Baghdady et al. Math 3.1 (2016): 1-8.
 for ii = 1:N
     for jj = 1:N
         if (ii == jj) && (ii == 1)
@@ -57,9 +59,8 @@ for ii = 1:N
         end
     end
 end
-mat.D = D*(2/diff(int));     % First order derivative matrix. Double size N x N
-mat.D2 = D*D;                % Second order derivative matrix. Double size N x N
-
+mat.D = D*(2/diff(int));     % First order derivative matrix translated to desired domain coordinates. Double size N x N
+mat.D2 = D*D;                % Second order derivative matrix tranlated to desired domain coordinates. Double size N x N
 
 end
 

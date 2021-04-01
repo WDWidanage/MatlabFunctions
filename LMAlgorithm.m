@@ -63,7 +63,7 @@ addParameter(p,'dispMsg','on')
 % Re-parse parObj
 parse(p,fh, theta0, u, d, varargin{:})
 
-% If a s is passed as a null vector revert to default
+% If s is passed as a null vector revert to default
 if isempty(p.Results.s)
     varargin{1,1} = rmfield(varargin{1,1},'s');
     parse(p,fh, theta0, u, d, varargin{:})

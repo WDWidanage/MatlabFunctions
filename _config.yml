@@ -1,0 +1,8 @@
+title: Matlab functions
+description: A collection of user defined Matlab functions
+google_analytics: UA-59556429-1
+show_downloads: true
+theme: jekyll-theme-midnight
+
+gems:
+  - jekyll-mentions

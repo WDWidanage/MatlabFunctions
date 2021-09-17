@@ -25,19 +25,19 @@ else
 end
 
 for rr = 1:length(resTimes)
-%     if max(timeVec) >= resTimes(rr)
+     if max(timeVec) >= resTimes(rr)
         [~,idx] = min(abs(timeVec - resTimes(rr)));
         res(rr) = abs(data.Voltage(idx)-data.Voltage(1))/abs(data.Current(idx));
         
         if (abs(data.Current(idx))) <  0.95* max(abs(data.Current))
             options.msg = 'Possible current derate';
         else
-            options.msg = 'Valid resistance';
+            options.msg = "Valid resistance";
         end
-%     else
-%         res(rr) = nan;
-%         options.msg = 'Pulse length shorter than request';
-%     end
+    else
+        res(rr) = nan;
+        options.msg = 'Pulse length shorter than request';
+    end
     options.current = max(abs(data.Current));
     options.Crate = max(abs(data.Current))/Cn; 
     

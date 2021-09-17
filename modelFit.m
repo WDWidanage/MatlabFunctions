@@ -9,7 +9,7 @@ function results = modelFit(x,y)
 x = x(:);
 y = y(:);
 error = x-y;
-results.RMSE = rms(error);
+results.RMSE = rms(error,'omitnan');
 results.PkErr = max(abs(x-y));
-results.gof = max([0, 1 - (rms(error)^2/var(y))]);
+results.gof = max([0, 1 - (rms(error,'omitnan')^2/var(y,'omitnan'))]);
 end

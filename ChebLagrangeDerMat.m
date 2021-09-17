@@ -1,3 +1,4 @@
+
 function [mat,info] = ChebLagrangeDerMat(varargin)
 %
 % Computes the first and second order derivative matrices based on
@@ -36,7 +37,7 @@ N = parObj.Results.N;
 int = parObj.Results.int;
 
 P = N - 1;                          % Chebyshev polynomial order
-sn = -cos([0:P]'*pi/P);              % Collocation points on standard interval 
+sn = -cos([0:P]'*pi/P);             % Collocation points on standard interval 
 xn = int(1) + diff(int)*(1+sn)/2;   % Collocation points on input interval
 info.sn = sn;
 info.xn = xn;

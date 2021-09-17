@@ -228,7 +228,7 @@ else
     annotationFontAngle = 'Normal';                 % Annotation font angle, 'Normal, 'Italic','Oblique'
     annotationFontColour = 'black';                     % Annotation (arrow, line) colour
     
-    interpreter = 'None';                            % Set interpreter, Tex, Latex or None
+    interpreter = 'tex';                            % Set interpreter, Tex, Latex or None
     
     defAxisSize = [0.13,0.15,0.775,0.770];          % Use this as default axis postion and size if only one plot, multiple plots uses matlab default
     defFigSize = [90,70,1100,600];                  % Default figure postion and size

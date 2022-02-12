@@ -139,6 +139,8 @@ for kk = 1:length(F)
     end
 end
 
+db = @(x) 20*log(abs(x));
+
 if plotLPM
     figure
     phG = @(G) unwrap(angle(G))*180/pi;     % Function for transfer function phase

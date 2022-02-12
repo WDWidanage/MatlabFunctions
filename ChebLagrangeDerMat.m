@@ -1,5 +1,5 @@
 
-function [mat,info] = ChebLagrangeDerMat(varargin)
+function [mat,info] = ChebLagrangeDerMat(nvp)
 %
 % Computes the first and second order derivative matrices based on
 % 1D Lagrange interpolation functions and Chebyshev collocation points of
@@ -24,17 +24,13 @@ function [mat,info] = ChebLagrangeDerMat(varargin)
 % All Rights Reserved
 % Software may be used freely for non-comercial purposes only
 
-parObj = inputParser; % Create an input parse object to handle positional and property-value arguments
+arguments
+    nvp.N = 6
+    nvp.int = [-1 1];
+end
 
-% Optional parameters
-addOptional(parObj,'N',6,@isnumeric);
-addOptional(parObj,'int',[-1,1],@isnumeric);
-
-% Re-parse parObj
-parse(parObj,varargin{:})
-
-N = parObj.Results.N;
-int = parObj.Results.int;
+N = nvp.N;
+int = nvp.int;
 
 P = N - 1;                          % Chebyshev polynomial order
 sn = -cos([0:P]'*pi/P);             % Collocation points on standard interval 

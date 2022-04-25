@@ -57,7 +57,7 @@ for ii = 1:N
     end
 end
 mat.D = D*(2/diff(int));     % First order derivative matrix translated to desired domain coordinates. Double size N x N
-mat.D2 = D*D;                % Second order derivative matrix tranlated to desired domain coordinates. Double size N x N
+mat.D2 = mat.D*mat.D;        % Second order derivative matrix translated to desired domain coordinates. Double size N x N
 
 end
 

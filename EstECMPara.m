@@ -106,13 +106,15 @@ paraInfo.pkErrECM = max(abs(errorECM));
 
 if plotFit == 1
     figure();
-    subplot(2,1,1)
+    ax(1) = subplot(2,1,1);
+    t = t - t(1);
     plot(t,u,'. -');
     ylabel('Current (A)');
-    subplot(2,1,2)
+    ax(2) = subplot(2,1,2);
     plot(t,v,'- .',t,vFit,'-')
     xlabel('Time (s)'); ylabel('Voltage (V)'); legend('Measured','ECM sim')
-    title(['RMSE ECM: ',num2str(paraInfo.resNorm),' Pk Err ECM: ', num2str(paraInfo.pkErrECM)]);
+    title(['RMSE ECM: ',num2str(paraInfo.resNorm*1000),'mV Pk Err ECM: ', num2str(paraInfo.pkErrECM*1000),'mV']);
+    linkaxes(ax,'x')
 end
 
 
